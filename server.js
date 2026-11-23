@@ -11,7 +11,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { pingInterval: 10000, pingTimeout: 20000, maxHttpBufferSize: 200000 });
 
-const PUBLIC = path.join(__dirname, 'public');
+const fs = require('fs');
+// files may sit in ./public or, if uploaded flat, next to server.js
+const PUBLIC = fs.existsSync(path.join(__dirname, 'public', 'index.html')) ? path.join(__dirname, 'public') : __dirname;
 app.use(express.static(PUBLIC));
 app.get('/host', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html')));
 app.get('/healthz', (req, res) => res.send('ok'));
